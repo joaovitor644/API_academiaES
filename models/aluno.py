@@ -20,14 +20,14 @@ class Aluno:
         VALUES (:matricula, :nome, :data_nascimento, :cpf, :email, :telefone, :endereco_id_endereco, :plano_id) 
         """)
         params = {
-            "matricula": self.matricula,
+            "matricula": int(self.matricula),
             "nome": self.nome,
             "data_nascimento": self.data_nascimento,
             "cpf": self.cpf,
             "email": self.email,
             "telefone": self.telefone,
             "endereco_id_endereco": self.id_endereco,
-            "plano_id": self.plano_id
+            "plano_id": int(elf.plano_id)
         }
         session.execute(query, params)
         
