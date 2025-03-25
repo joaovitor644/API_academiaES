@@ -11,7 +11,7 @@ class Endereco:
     bairro: str
     cidade: str 
 
-    def CadastrarEndereco(self):
+    def CadastrarEndereco(self , session):
         try:
             sessionLocal = sessionmaker(bind=engine)
             session = sessionLocal()
@@ -22,7 +22,7 @@ class Endereco:
                 "logradouro": self.logradouro,
                 "cep": self.cep,
                 "rua": self.rua,
-                "num_casa": self.num_casa,
+                "num_casa": int(self.num_casa),
                 "bairro": self.bairro,
                 "cidade": self.cidade
             }

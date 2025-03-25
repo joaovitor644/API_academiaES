@@ -3,9 +3,13 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
 HOST = os.getenv("HOST")
 PASSWORD = os.getenv("PASSWORD_BD")
-DATABASE_URL = f"postgresql://postgres:{PASSWORD}@{HOST}"
+USER = os.getenv("USER")
+DB = os.getenv("DB")
+
+DATABASE_URL = f"postgresql://{USER}:{PASSWORD}@{HOST}/{DB}"
 engine = create_engine(DATABASE_URL)
 
 if __name__ == '__main__':
