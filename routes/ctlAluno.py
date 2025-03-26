@@ -28,6 +28,7 @@ def CadastrarAluno():
     bairro = data.get('bairro')
     cidade = data.get('cidade')
     plano_id = data.get('plano_id')
+    lista_aulas_id = data.get('aulas_id')
 
     sessionLocal = sessionmaker(bind=engine)
     session = sessionLocal()
@@ -37,6 +38,8 @@ def CadastrarAluno():
         id_end = end.CadastrarEndereco(session)
         aluno = Aluno(matricula, nome, data_nascimento, cpf, email, telefone, id_end, plano_id)
         aluno.CadastrarAluno(session)
+        for aula_id in lista_aulas_id:
+            aluno.CadastrarAlunoAula(aula_id, session)
         session.commit()
         return jsonify({"mensagem": "Aluno cadastrado com sucesso!", "dados": data}), 201
     
@@ -52,36 +55,42 @@ def CadastrarAluno():
 
 @aluno_route.route('/ListarAluno', methods=['GET'])
 def ListarAluno():
-    aluno = Aluno(0, "", "", "", "", "", 0, 0)
-    result = aluno.ListarAluno()
-    if result:
+    session = sessionmaker(bind=engine)()
+    
+    try:
+        aluno = Aluno(0, "", "", "", "", "", 0, 0)
+        result = aluno.ListarAluno(session)
+        
         alunos = [
-            {"matricula": row[0], "nome": row[1], "data_nascimento": row[2], "cpf": row[3], "email": row[4], "telefone": row[5], "endereco_id": row[6], "plano_id": row[7]}
+            {"matricula": row[0], "nome": row[1], "data_nascimento": row[2], "cpf": row[3], "email": row[4], "telefone": row[5]}
             for row in result
         ]
         return jsonify({"alunos": alunos}), 200
-    return jsonify({"mensagem": "Erro ao listar alunos"}), 404
+    except Exception as e:
+        print(f"Erro: {e}")
+        return jsonify({"mensagem": "Erro ao listar alunos"}), 404
 
 
 
 @aluno_route.route('/FormAtualizarAluno/<int:matricula>', methods=['GET'])
 def FormAtualizarAluno(matricula):
+    session = sessionmaker(bind=engine)()
+        
     try:
-        sessionLocal = sessionmaker(bind=engine)
-        session = sessionLocal()
-
         aluno = Aluno(matricula, "", "", "", "", "", 0, 0)
-        resultAluno = aluno.GetAluno(session)
-        result = resultAluno[6]
+        resultAluno = aluno.GetAllAluno(session)
 
-        endereco = Endereco(0, "", "", 0, "", "")
-        print(type(result))
-        result_endereco = endereco.GetEndereco(result, session)
+        chaves = [
+        "matricula", "nome", "data_nascimento", "cpf", "email", "telefone",
+        "logradouro", "cep", "rua", "num_casa", "bairro", "cidade",
+        "nome_plano", "valor_plano", "descricao_plano", "id_avaliacao_fisica",
+        "altura", "peso", "observacoes", "biotipo", "medidas",
+        "id_pendencia", "data_criacao_pendencia", "data_vencimento_pendencia",
+        "pendencia_descricao", "pendencia_status", "id_treino",
+        "objetivo_treino", "dificuldade_treino"
+    ]
+        aluno = dict(zip(chaves, resultAluno))
 
-        aluno = {"matricula": resultAluno[0], "nome": resultAluno[1], "data_nascimento": resultAluno[2], "cpf": resultAluno[3],
-        "email": resultAluno[4], "telefone": resultAluno[5], "endereco_id": resultAluno[6],
-        "plano_id": resultAluno[7], "logradouro": result_endereco[1], "cep": result_endereco[2],
-        "rua": result_endereco[3], "num_casa": result_endereco[4], "bairro": result_endereco[5], "cidade": result_endereco[6]}
         return jsonify({"aluno": aluno}), 200
     except Exception as e:
         print(f"Erro: {e}")
@@ -89,9 +98,6 @@ def FormAtualizarAluno(matricula):
 
 
 
-@aluno_route.route('/FormAtualizarAlunoAula', methods=['GET'])
-def FormAtualizarAlunoAula():
-    ...
 
 
 @aluno_route.route('/AtualizarAluno', methods=['PATCH'])

@@ -12,9 +12,6 @@ class Endereco:
     cidade: str 
 
     def CadastrarEndereco(self , session):
-        try:
-            sessionLocal = sessionmaker(bind=engine)
-            session = sessionLocal()
             query = text("""INSERT INTO mydb.endereco (logradouro, cep, rua, num_casa, bairro, cidade)
             VALUES (:logradouro, :cep, :rua, :num_casa, :bairro, :cidade)
             RETURNING id_endereco""")
@@ -28,13 +25,8 @@ class Endereco:
             }
             result = session.execute(query, params)
             id_endereco = result.fetchone()[0]
-            session.commit()
             return id_endereco
-        except Exception as e:
-            return str(e)
-        finally:
-            session.close()
-
+            
     
     def GetEndereco(self, id_endereco):
         try:
