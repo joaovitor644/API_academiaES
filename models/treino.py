@@ -1,6 +1,4 @@
-from BD.bd import engine
 from dataclasses import dataclass
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import text
 
 @dataclass
