@@ -10,10 +10,13 @@ class Endereco:
     num_casa: int
     bairro: str
     cidade: str 
+    aluno_matricula: int = None
+    funcionario_nit: int = None
+    
 
     def CadastrarEndereco(self , session):
-            query = text("""INSERT INTO mydb.endereco (logradouro, cep, rua, num_casa, bairro, cidade)
-            VALUES (:logradouro, :cep, :rua, :num_casa, :bairro, :cidade)
+            query = text("""INSERT INTO mydb.endereco (logradouro, cep, rua, num_casa, bairro, cidade, aluno_matricula, funcionario_nit)
+            VALUES (:logradouro, :cep, :rua, :num_casa, :bairro, :cidade, :aluno_matricula, :funcionario_nit)
             RETURNING id_endereco""")
             params = {
                 "logradouro": self.logradouro,
@@ -21,11 +24,34 @@ class Endereco:
                 "rua": self.rua,
                 "num_casa": int(self.num_casa),
                 "bairro": self.bairro,
-                "cidade": self.cidade
+                "cidade": self.cidade,
+                "aluno_matricula": int(self.aluno_matricula) if self.aluno_matricula else None,
+                "funcionario_nit": int(self.funcionario_nit) if self.funcionario_nit else None
             }
-            result = session.execute(query, params)
-            id_endereco = result.fetchone()[0]
-            return id_endereco
+            session.execute(query, params)
+            
+    
+    def AtualizarEndereco(self, session):
+        query = """
+        UPDATE Endereco SET
+        logradouro = :logradouro,
+        cep = :cep,
+        rua = :rua,
+        num_casa = :num_casa,
+        bairro = :bairro,   
+        cidade = :cidade
+        WHERE id_endereco = :id_endereco
+        """
+        params = {
+            "logradouro": self.logradouro,
+            "cep": self.cep,
+            "rua": self.rua,
+            "num_casa": self.num_casa,
+            "bairro": self.bairro,
+            "cidade": self.cidade,
+            "id_endereco": self.id_endereco
+        }
+        session.execute(query, params)
             
     
     def GetEndereco(self, id_endereco):

@@ -5,6 +5,7 @@ from models.funcionario import Funcionario
 from models.endereco import Endereco
 from models.adm import Adm
 from models.instrutor import Instrutor
+from models.contrato import Contrato
 
 funcionario_route = Blueprint('funcionario', __name__)
 
@@ -26,14 +27,20 @@ def CadastrarFuncionario():
     is_admin = data.get('is_admin')
     cargo = data.get('cargo')
     grau_academico = data.get('grau_academico')
+    salario = data.get("salario")
+    data_contratacao = data.get("data_contratacao")
+    data_final = data.get("data_final")
 
     session = sessionmaker(bind=engine)()
 
     try:
+        contrato = Contrato(salario, data_contratacao, data_final)
+        id_contrato = contrato.CadastrarContrato(session)
+
         end = Endereco(logradouro, cep, rua, num_casa, bairro, cidade)
         id_endereco = end.CadastrarEndereco(session)
 
-        funcionario = Funcionario(nit, nome, data_nascimento, cpf, email, telefone, id_endereco)
+        funcionario = Funcionario(nit, nome, data_nascimento, cpf, email, telefone, id_endereco, id_contrato)
         funcionario.CadastrarFuncionario(session)
         
         if is_admin:
@@ -57,10 +64,10 @@ def CadastrarFuncionario():
 def ListarFuncionarios():
     session = sessionmaker(bind=engine)()
     try:
-        funcionario = Funcionario("", "", "", "", "", "", "")
+        funcionario = Funcionario("", "", "", "", "", "", "", "")
         result = funcionario.ListarFuncionarios(session)
         funcionarios = [
-            {"nit": row[0], "nome": row[1], "data_nascimento": row[2], "cpf": row[3], "email": row[4], "telefone": row[5], "id_endereco": row[6]}
+            {"nit": row[0], "nome": row[1], "data_nascimento": row[2], "cpf": row[3], "email": row[4], "telefone": row[5], "id_endereco": row[6], "id_contrato": row[7]}
             for row in result
         ]
         return jsonify({"funcionarios": funcionarios}), 200

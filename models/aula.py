@@ -12,7 +12,6 @@ class Aula:
         query_aula = text("""
         INSERT INTO mydb.aula (horario, tipo, sala)
         VALUES (:horario, :tipo, :sala)
-        RETURNING id_aula
         """)
         params_aula = {
             "horario": self.horario,

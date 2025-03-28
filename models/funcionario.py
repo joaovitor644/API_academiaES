@@ -12,6 +12,7 @@ class Funcionario:
     email: str
     telefone: str
     id_endereco: int
+    id_contrato: int
 
 
     def  ListarFuncionarios(self, session):
@@ -24,8 +25,8 @@ class Funcionario:
     
     def CadastrarFuncionario(self, session):
         query = text("""
-        INSERT INTO mydb.funcionario (nit, nome, data_nascimento, cpf, email, telefone, endereco_id_endereco) 
-        VALUES (:nit, :nome, :data_nascimento, :cpf, :email, :telefone, :endereco_id_endereco) 
+        INSERT INTO mydb.funcionario (nit, nome, data_nascimento, cpf, email, telefone, endereco_id_endereco, contrato_id_contrato) 
+        VALUES (:nit, :nome, :data_nascimento, :cpf, :email, :telefone, :endereco_id_endereco, :contrato_id_contrato) 
         """)
         params = {
             "nit": int(self.nit),
@@ -34,7 +35,8 @@ class Funcionario:
             "cpf": self.cpf,
             "email": self.email,
             "telefone": self.telefone,
-            "endereco_id_endereco": self.id_endereco
+            "endereco_id_endereco": self.id_endereco,
+            "contrato_id_contrato": self.id_contrato
         }
         session.execute(query, params)
 
