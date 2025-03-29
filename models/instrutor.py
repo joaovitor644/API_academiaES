@@ -17,4 +17,16 @@ class Instrutor():
             "grau_academico": self.grau_academico
         }
         session.execute(query_instrutor, params_instrutor)
+
+    def AtualizarInstrutor(self, session):
+        query = text("""
+        UPDATE mydb.instrutor SET
+        grau_academico = :grau_academico
+        WHERE funcionario_NIT = :funcionario_NIT
+        """)
+        params = {
+            "grau_academico": self.grau_academico,
+            "funcionario_NIT": self.nit
+        }        
+        session.execute(query, params)
             

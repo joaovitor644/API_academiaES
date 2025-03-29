@@ -78,7 +78,7 @@ def FormAtualizarAluno(matricula):
     session = sessionmaker(bind=engine)()
         
     try:
-        aluno = Aluno(matricula, "", "", "", "", "", 0, 0)
+        aluno = Aluno(matricula, "", "", "", "", "", 0)
         resultAluno = aluno.GetAllAluno(session)
 
         dictAluno = {
@@ -90,21 +90,23 @@ def FormAtualizarAluno(matricula):
             "email": resultAluno[4],
             "telefone": resultAluno[5]
         },
-        "endereco": {
-            "logradouro": resultAluno[6],
-            "cep": resultAluno[7],
-            "rua": resultAluno[8],
-            "num_casa": resultAluno[9],
-            "bairro": resultAluno[10],
-            "cidade": resultAluno[11]
-        },
         "plano": {
-            "nome_plano": resultAluno[12],
-            "valor_plano": resultAluno[13],
-            "descricao_plano": resultAluno[14]
+            "id_plano": resultAluno[6],
+            "nome_plano": resultAluno[7],
+            "valor_plano": resultAluno[8],
+            "descricao_plano": resultAluno[9]
         },
-        "ids_treino": resultAluno[15],
-        "ids_aula": resultAluno[16]
+        "endereco": {
+            "id_endereco": resultAluno[10],
+            "logradouro": resultAluno[11],
+            "cep": resultAluno[12],
+            "rua": resultAluno[13],
+            "num_casa": resultAluno[14],
+            "bairro": resultAluno[15],
+            "cidade": resultAluno[16]
+        },
+        "ids_treino": resultAluno[17],
+        "ids_aula": resultAluno[18]
     }
 
 
@@ -117,10 +119,10 @@ def FormAtualizarAluno(matricula):
 
 
 
-@aluno_route.route('/AtualizarAluno', methods=['PATCH'])
-def AtualizarAluno():
+@aluno_route.route('/AtualizarAluno/<int:matricula>', methods=['PUT'])
+def AtualizarAluno(matricula):
     data = request.get_json()  
-    matricula = data.get('matricula')
+    matricula = str(matricula)
     nome = data.get('nome')
     data_nascimento = data.get('data_nascimento')
     cpf = data.get('cpf')
@@ -133,27 +135,31 @@ def AtualizarAluno():
     bairro = data.get('bairro')
     cidade = data.get('cidade')
     plano_id = data.get('plano_id')
-    lista_aulas_id = data.get('aulas_id')
+    lista_aulas_id = data.get('aulas_id') or []
+    lista_treinos_id = data.get('treinos_id') or []
 
     sessionLocal = sessionmaker(bind=engine)
     session = sessionLocal()
 
     try:
-        aluno = Aluno(matricula, nome, data_nascimento, cpf, email, telefone, id_end, plano_id)
-        ids = aluno.AtualizarAluno(session)
-        print(ids)
-        end = Endereco(logradouro, cep, rua, num_casa, bairro, cidade)
-        id_end = end.CadastrarEndereco(ids[0], session)
-        
+        aluno = Aluno(matricula, nome, data_nascimento, cpf, email, telefone, plano_id)
+        aluno.AtualizarAluno(matricula, session)
+        end = Endereco(logradouro, cep, rua, num_casa, bairro, cidade, matricula, None)
+        end.AtualizarEndereco(matricula, session)
+        aluno.ExcluirAlunoDeAula(session)
+        aluno.ExcluirAlunoDeTreino(session)
         for aula_id in lista_aulas_id:
             aluno.CadastrarAlunoAula(aula_id, session)
+        for treino_id in lista_treinos_id:
+            aluno.CadastrarAlunoTreino(treino_id, session)
+
         session.commit()
-        return jsonify({"mensagem": "Aluno cadastrado com sucesso!", "dados": data}), 201
+        return jsonify({"mensagem": "Aluno atualizado com sucesso!", "dados": data}), 201
     
     except Exception as e:
         session.rollback()
         print(f"Erro: {e}")
-        return jsonify({"mensagem": "Erro ao cadastrar aluno", "erro": str(e)}), 404
+        return jsonify({"mensagem": "Erro ao atualizar aluno", "erro": str(e)}), 404
     
     finally:
         session.close()

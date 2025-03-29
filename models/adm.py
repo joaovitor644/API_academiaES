@@ -18,14 +18,14 @@ class Adm():
         }
         session.execute(query_administrador, params_administrador)
 
-if __name__ == "__main__":
-    adm = Adm(
-        nit=1,
-        nome="John Doe",
-        data_nascimento="1990-01-01",
-        cpf="123.456.789-00",
-        email="john.doe@example.com",
-        telefone="123456789",
-        token="123456"
-    )
-    print(adm.CadastrarAdm())
+    def AtualizarAdm(self, session):
+        query = text("""
+        UPDATE mydb.administrador SET
+        cargo = :cargo
+        WHERE funcionario_NIT = :funcionario_NIT
+        """)
+        params = {
+            "cargo": self.cargo,
+            "funcionario_NIT": self.nit
+        }
+        session.execute(query, params)
