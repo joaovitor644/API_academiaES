@@ -85,7 +85,7 @@ def AtualizarAula(id_aula):
         aula.AtualizarAula(id_aula, session)
         aula.ExcluirFuncionarioAula(id_aula, session)
         for id_funcionario in ids_funcionario:
-            aula.CadastrarFuncionarioAula(id_aula, id_funcionario, session)
+            aula.CadastrarFuncionarioAula(id_funcionario, id_aula, session)
         session.commit()
         return jsonify({"mensagem": "Aula atualizada com sucesso!", "dados": data}), 201
     except Exception as e:
@@ -95,7 +95,7 @@ def AtualizarAula(id_aula):
     finally:
         session.close() 
 
-        
+
 
 @aula_route.route('/ExcluirAula/<int:id_aula>', methods=['DELETE'])
 def ExcluirAula(id_aula):
