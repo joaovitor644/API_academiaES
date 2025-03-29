@@ -73,7 +73,6 @@ def FormAtualizarVisitante(id_visitante):
     try:
         resultVisitante = visitante.GetVisitante(id_visitante, session)
         if resultVisitante:
-            print(resultVisitante)
             visitante = {"id_visitantes": resultVisitante[0], "nome": resultVisitante[1], "data_visita": resultVisitante[2], "telefone": resultVisitante[3], "qunt_visitas": resultVisitante[4]}
             return jsonify({"visitante": visitante}), 200
         elif resultVisitante is None:
@@ -103,7 +102,6 @@ def AtualizarVisitante():
     
     try:
         ids = visitante.AtualizarVisitante(id_visitante, session)
-        print(ids)
         session.commit()
         if ids is None:
             return jsonify({"mensagem": "Visitante não encontrado"}), 404
@@ -122,8 +120,10 @@ def RemoverVisitante(id_visitante):
     visitante = Visitante("", "", "", "")
     session = sessionmaker(bind=engine)()
     try:
-        visitante.RemoverVisitante(id_visitante, session)
+        rowsResult = visitante.RemoverVisitante(id_visitante, session)
         session.commit()
+        if rowsResult == 0:
+            return jsonify({"mensagem": "Visitante não encontrado"}), 404
         return jsonify({"mensagem": "Visitante removido com sucesso!"}), 200
     
     except Exception as e:

@@ -44,11 +44,12 @@ class Visitante:
         id = result.fetchone()
         return id
         
-
+    #Errado
     def RemoverVisitante(self, id_visitante, session):
         query = text("DELETE FROM mydb.visitantes WHERE id_visitantes = :id_visitantes")
         params = {"id_visitantes": id_visitante}
-        session.execute(query, params)
+        result = session.execute(query, params)
+        return result.rowcount
 
     def GetVisitante(self, id_visitante, session):
         query = text("SELECT * FROM mydb.visitantes WHERE id_visitantes = :id_visitantes")
