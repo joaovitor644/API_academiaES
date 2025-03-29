@@ -91,7 +91,6 @@ def FormAtualizarVisitante(id_visitante):
 @visitante_route.route('/AtualizarVisitante/<int:id_visitante>', methods=['PUT'])
 def AtualizarVisitante(id_visitante):
     data = request.get_json()  # Obtém o JSON enviado
-    id_visitante = id_visitante
     nome = data.get('nome')
     data_visita = data.get('data_visita')
     telefone = data.get('telefone')
