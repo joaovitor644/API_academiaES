@@ -73,10 +73,9 @@ def FormAtualizarPlano(id_plano):
         session.close()
 
 
-@plano_route.route('/AtualizarPlano', methods=['PATCH'])
-def AtualizarPlano():
+@plano_route.route('/AtualizarPlano/<int:id_plano>', methods=['PUT'])
+def AtualizarPlano(id_plano):
     data = request.get_json()
-    id_plano = data.get('id_plano')
     nome = data.get('nome')
     valor = data.get('valor')
     descricao = data.get('descricao')

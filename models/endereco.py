@@ -31,17 +31,17 @@ class Endereco:
             session.execute(query, params)
             
     
-    def AtualizarEndereco(self, session):
-        query = """
-        UPDATE Endereco SET
+    def AtualizarEndereco(self, aluno_matricula, session):
+        query = text("""
+        UPDATE mydb.endereco SET
         logradouro = :logradouro,
         cep = :cep,
         rua = :rua,
         num_casa = :num_casa,
         bairro = :bairro,   
         cidade = :cidade
-        WHERE id_endereco = :id_endereco
-        """
+        WHERE aluno_matricula = :aluno_matricula
+        """)
         params = {
             "logradouro": self.logradouro,
             "cep": self.cep,
@@ -49,7 +49,29 @@ class Endereco:
             "num_casa": self.num_casa,
             "bairro": self.bairro,
             "cidade": self.cidade,
-            "id_endereco": self.id_endereco
+            "aluno_matricula": aluno_matricula
+        }
+        session.execute(query, params)
+
+    def AtualizarEnderecoFunc(self, funcionario_nit, session):
+        query = text("""
+        UPDATE mydb.endereco SET
+        logradouro = :logradouro,
+        cep = :cep,
+        rua = :rua,
+        num_casa = :num_casa,
+        bairro = :bairro,   
+        cidade = :cidade
+        WHERE funcionario_nit = :funcionario_nit
+        """)
+        params = {
+            "logradouro": self.logradouro,
+            "cep": self.cep,
+            "rua": self.rua,
+            "num_casa": self.num_casa,
+            "bairro": self.bairro,
+            "cidade": self.cidade,
+            "funcionario_nit": funcionario_nit
         }
         session.execute(query, params)
             

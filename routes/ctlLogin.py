@@ -1,16 +1,14 @@
 from flask import Blueprint, request, jsonify, session
-from werkzeug.security import check_password_hash , generate_password_hash
 import hashlib
-from sqlalchemy.orm import sessionmaker
-from BD.bd import engine
-from models.login import Login
 
-auth = Blueprint('auth', __name__)
+from models.usuario import Usuario
+
+login_route = Blueprint('login', __name__)
 
 # Configuração da sessão (adicionar no seu app.py ou onde você inicializa o Flask)
 # app.secret_key = 'sua_chave_secreta_aqui'
 
-@auth.route('/auth', methods=['POST'])
+@login_route.route('/login', methods=['POST'])
 def login():
     data = request.json
     username = data.get('username')
@@ -20,8 +18,8 @@ def login():
         return jsonify({'message': 'Usuário e senha são obrigatórios'}), 400
 
     # Busca o usuário no banco de dados
-    login1 = Login(username, password)
-    user_info = login1.Auth()
+    login1 = Usuario(username, password)
+    user_info = login1.Login()
     print(user_info)
     if not user_info:
         return jsonify({'message': 'Usuário não encontrado'}), 404
@@ -39,18 +37,18 @@ def login():
     }), 401
 
 
-@auth.route('/logout', methods=['POST'])
+@login_route.route('/logout', methods=['POST'])
 def logout():
     session.pop('user', None)
     session.pop('is_admin', None)
     return jsonify({'message': 'Logoff bem-sucedido'}), 200
 
-@auth.route('/session', methods=['GET'])
+@login_route.route('/session', methods=['GET'])
 def get_session():
     user = session.get('user')
     is_admin = session.get('is_admin')
-    login1 = Login(user, '_')
-    user_info = login1.Auth()
+    login1 = Usuario(user, '_')
+    user_info = login1.Login()
     if user_info:
         return jsonify({'permission': 'OK', 'user': user, 'isAdm': is_admin}), 200
     return jsonify({'permission': 'ERR'}), 401
