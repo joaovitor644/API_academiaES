@@ -90,10 +90,9 @@ def FormAtualizarAvaliacaoFisica(id_avaliacao_fisica):
         
 
 
-@avaliacao_fisica_route.route('/AtualizarAvaliacaoFisica', methods=['PUT'])
-def AtualizarAvaliacaoFisica():
+@avaliacao_fisica_route.route('/AtualizarAvaliacaoFisica/<int:id_avaliacao_fisica>', methods=['PUT'])
+def AtualizarAvaliacaoFisica(id_avaliacao_fisica):
     data = request.get_json()  # Obtém o JSON enviado
-    id_avaliacao_fisica = data.get('id_avaliacao_fisica')
     altura = data.get('altura')
     peso = data.get('peso')
     observacoes = data.get('observacoes')
