@@ -88,7 +88,7 @@ def ListarFuncionarios():
         session.close()
 
 
-@funcionario_route.route('/FormAtualizarFuncionario/<string:nit>', methods=['GET'])
+@funcionario_route.route('/FormAtualizarFuncionario/<int:nit>', methods=['GET'])
 def FormAtualizarFuncionario(nit):
     session = sessionmaker(bind=engine)()
     try:
