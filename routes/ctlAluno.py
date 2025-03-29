@@ -73,7 +73,7 @@ def ListarAluno():
 
 
 
-@aluno_route.route('/FormAtualizarAluno/<int:matricula>', methods=['GET'])
+@aluno_route.route('/FormAtualizarAluno/<string:matricula>', methods=['GET'])
 def FormAtualizarAluno(matricula):
     session = sessionmaker(bind=engine)()
         
@@ -119,10 +119,9 @@ def FormAtualizarAluno(matricula):
 
 
 
-@aluno_route.route('/AtualizarAluno/<int:matricula>', methods=['PUT'])
+@aluno_route.route('/AtualizarAluno/<string:matricula>', methods=['PUT'])
 def AtualizarAluno(matricula):
     data = request.get_json()  
-    matricula = str(matricula)
     nome = data.get('nome')
     data_nascimento = data.get('data_nascimento')
     cpf = data.get('cpf')
@@ -165,7 +164,7 @@ def AtualizarAluno(matricula):
         session.close()
 
 
-@aluno_route.route('/ExcluirAluno/<int:matricula>', methods=['DELETE'])
+@aluno_route.route('/ExcluirAluno/<string:matricula>', methods=['DELETE'])
 def ExcluirAluno(matricula):
     session = sessionmaker(bind=engine)()
     try:
