@@ -7,6 +7,7 @@ from routes.ctlTreino import treino_route
 from routes.ctlVisitante import visitante_route
 from routes.ctlGestMaterial import gestMaterial_route
 from routes.ctlFuncionario import funcionario_route
+from routes.ctlAvFisica import avaliacao_fisica_route
 from routes.ctlExercicio import exercicio_route
 from flask_cors import CORS
 import os
@@ -26,6 +27,7 @@ app.register_blueprint(visitante_route)
 app.register_blueprint(gestMaterial_route)
 app.register_blueprint(funcionario_route)
 app.register_blueprint(treino_route)
+app.register_blueprint(avaliacao_fisica_route)
 app.register_blueprint(exercicio_route)
 
 
