@@ -32,7 +32,7 @@ def ListarTreinos():
     session = sessionmaker(bind=engine)()
     try:
         treino = Treino("", "")
-        treinos = treino.ListarTrinos(session)
+        treinos = treino.ListarTreinos(session)
         dictTreinos = [{"id": row[0], "objetivo": row[1], "dificuldade": row[2]} for row in treinos]
         return jsonify({"mensagem": "Lista de treinos encontrada com sucesso!", "dados": dictTreinos}), 200
     except Exception as e:
