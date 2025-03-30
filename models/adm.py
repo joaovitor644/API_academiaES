@@ -4,7 +4,7 @@ from sqlalchemy.sql import text
 
 @dataclass
 class Adm():
-    nit: int
+    nit: str
     cargo: str
 
     def CadastrarAdm(self, session):

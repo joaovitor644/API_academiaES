@@ -88,7 +88,7 @@ def ListarFuncionarios():
         session.close()
 
 
-@funcionario_route.route('/FormAtualizarFuncionario/<int:nit>', methods=['GET'])
+@funcionario_route.route('/FormAtualizarFuncionario/<string:nit>', methods=['GET'])
 def FormAtualizarFuncionario(nit):
     session = sessionmaker(bind=engine)()
     try:
@@ -153,7 +153,7 @@ def FormAtualizarFuncionario(nit):
 
 
 
-@funcionario_route.route('/AtualizarFuncionario/<int:nit>', methods=['PUT'])
+@funcionario_route.route('/AtualizarFuncionario/<string:nit>', methods=['PUT'])
 def AtualizarFuncionario(nit):
     data = request.get_json()
     nit = data.get('nit')
@@ -212,7 +212,7 @@ def AtualizarFuncionario(nit):
         session.close()
 
 
-@funcionario_route.route('/ExcluirFuncionario/<int:nit>', methods=['DELETE'])
+@funcionario_route.route('/ExcluirFuncionario/<string:nit>', methods=['DELETE'])
 def ExcluirFuncionario(nit):
     session = sessionmaker(bind=engine)()
     try:
