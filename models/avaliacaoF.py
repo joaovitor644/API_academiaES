@@ -9,7 +9,7 @@ class AvaliacaoFisica:
     observacoes: str
     biotipo: str
     medidas: str
-    matricula: int
+    matricula: str
     instrutor_NIT: str
 
     def CadastrarAvaliacaoFisica(self, session):

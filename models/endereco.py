@@ -10,8 +10,8 @@ class Endereco:
     num_casa: int
     bairro: str
     cidade: str 
-    aluno_matricula: int = None
-    funcionario_nit: int = None
+    aluno_matricula: str = None
+    funcionario_nit: str = None
     
 
     def CadastrarEndereco(self , session):
@@ -25,8 +25,8 @@ class Endereco:
                 "num_casa": int(self.num_casa),
                 "bairro": self.bairro,
                 "cidade": self.cidade,
-                "aluno_matricula": int(self.aluno_matricula) if self.aluno_matricula else None,
-                "funcionario_nit": int(self.funcionario_nit) if self.funcionario_nit else None
+                "aluno_matricula": self.aluno_matricula if self.aluno_matricula else None,
+                "funcionario_nit": self.funcionario_nit if self.funcionario_nit else None
             }
             session.execute(query, params)
             
