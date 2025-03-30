@@ -12,7 +12,6 @@ aluno_route = Blueprint('aluno', __name__)
 @aluno_route.route('/CadastrarAluno', methods=['POST'])
 def CadastrarAluno():
     data = request.get_json()  
-    matricula = data.get('matricula')
     nome = data.get('nome')
     data_nascimento = data.get('data_nascimento')
     cpf = data.get('cpf')
@@ -32,6 +31,7 @@ def CadastrarAluno():
     session = sessionLocal()
 
     try:
+        matricula = Aluno.gerar_matricula(session, nome, cpf)
         aluno = Aluno(matricula, nome, data_nascimento, cpf, email, telefone, plano_id)
         aluno.CadastrarAluno(session)
         end = Endereco(logradouro, cep, rua, num_casa, bairro, cidade, matricula, None)

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import secrets
 from sqlalchemy.orm import sessionmaker
 from BD.bd import engine
 from sqlalchemy.sql import text
@@ -119,5 +120,17 @@ class Aluno:
         result = session.execute(query, params)
         return result.fetchone()
    
+    @staticmethod
+    def gerar_matricula(session, nome, cpf):
+        letras_nome = nome[:2].upper() if len(nome) >= 2 else nome[0].upper() + "X"
+        cpf_part = cpf.replace(".", "").replace("-", "")[:2]
+        aleatorio = secrets.randbelow(90000) + 10000
 
-    
+        while True:
+            matricula = f"{letras_nome}{cpf_part}{aleatorio}"  
+
+            query = text("SELECT matricula FROM mydb.aluno WHERE matricula = :matricula")
+            result = session.execute(query, {"matricula": matricula}).fetchone()
+
+            if not result:
+                return matricula
