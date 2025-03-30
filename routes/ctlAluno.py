@@ -81,6 +81,7 @@ def FormAtualizarAluno(matricula):
         aluno = Aluno(matricula, "", "", "", "", "", 0)
         resultAluno = aluno.GetAllAluno(session)
 
+        print(resultAluno)
         dictAluno = {
         "aluno": {
             "matricula": resultAluno[0],
@@ -90,23 +91,24 @@ def FormAtualizarAluno(matricula):
             "email": resultAluno[4],
             "telefone": resultAluno[5]
         },
-        "plano": {
-            "id_plano": resultAluno[6],
-            "nome_plano": resultAluno[7],
-            "valor_plano": resultAluno[8],
-            "descricao_plano": resultAluno[9]
-        },
         "endereco": {
-            "id_endereco": resultAluno[10],
-            "logradouro": resultAluno[11],
-            "cep": resultAluno[12],
-            "rua": resultAluno[13],
-            "num_casa": resultAluno[14],
-            "bairro": resultAluno[15],
-            "cidade": resultAluno[16]
+            "id_endereco": resultAluno[6],
+            "logradouro": resultAluno[7],
+            "cep": resultAluno[8],
+            "rua": resultAluno[9],
+            "num_casa": resultAluno[10],
+            "bairro": resultAluno[11],
+            "cidade": resultAluno[12],
+            "aluno_matricula": resultAluno[13]
         },
-        "ids_treino": resultAluno[17],
-        "ids_aula": resultAluno[18]
+        "plano": {
+            "id_plano": resultAluno[14],
+            "nome_plano": resultAluno[15],
+            "valor_plano": resultAluno[16],
+            "descricao_plano": resultAluno[17]
+        },
+        "ids_treino": resultAluno[18],
+        "ids_aula": resultAluno[19]
     }
 
 
@@ -142,11 +144,11 @@ def AtualizarAluno(matricula):
 
     try:
         aluno = Aluno(matricula, nome, data_nascimento, cpf, email, telefone, plano_id)
-        aluno.AtualizarAluno(matricula, session)
+        aluno.AtualizarAluno(session)
         end = Endereco(logradouro, cep, rua, num_casa, bairro, cidade, matricula, None)
         end.AtualizarEndereco(matricula, session)
-        aluno.ExcluirAlunoDeAula(session)
-        aluno.ExcluirAlunoDeTreino(session)
+        aluno.ExcluirAlunoDeAulas(session) 
+        aluno.ExcluirAlunoDeTreinos(session)
         for aula_id in lista_aulas_id:
             aluno.CadastrarAlunoAula(aula_id, session)
         for treino_id in lista_treinos_id:
