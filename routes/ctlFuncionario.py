@@ -156,7 +156,6 @@ def FormAtualizarFuncionario(nit):
 @funcionario_route.route('/AtualizarFuncionario/<string:nit>', methods=['PUT'])
 def AtualizarFuncionario(nit):
     data = request.get_json()
-    nit = data.get('nit')
     nome = data.get('nome')
     data_nascimento = data.get('data_nascimento')
     cpf = data.get('cpf')
@@ -176,18 +175,20 @@ def AtualizarFuncionario(nit):
     data_final = data.get("data_final")
     username = data.get("username")
     password = data.get("password")
-    
+    hash_password = data.get("hash_password")
 
     session = sessionmaker(bind=engine)()
 
     try:
         funcionario = Funcionario(nit, nome, data_nascimento, cpf, email, telefone)
         funcionario.AtualizarFuncionario(session)
+        
 
         contrato = Contrato(salario, data_contratacao, data_final, nit)
         contrato.AtualizarContrato(session)
 
-        hash_password = hashlib.sha256(password.encode()).hexdigest()
+        if password:
+            hash_password = hashlib.sha256(password.encode()).hexdigest()
 
         usuario = Usuario(username, hash_password, is_admin, nit)
         usuario.AtualizarUsuario(session)
