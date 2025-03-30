@@ -15,7 +15,7 @@ def FormCadastrarVisitante():
 def CadastrarVisitante():
     data = request.get_json()  # Obtém o JSON enviado
     nome = data.get('nome')
-    data_visita = data.get('data_visita')
+    data_ultima_visita = data.get('data_ultima_visita')
     telefone = data.get('telefone')
     qunt_visitas = data.get('qunt_visitas')
 
@@ -23,7 +23,7 @@ def CadastrarVisitante():
     session = SessionLocal()
     
     try:
-        visitante = Visitante(nome, data_visita, telefone, qunt_visitas)
+        visitante = Visitante(nome, data_ultima_visita, telefone, qunt_visitas)
         visitante.CadastrarVisitante(session)
         session.commit()
         return jsonify({"mensagem": "Visitante cadastrado com sucesso!", "dados": data}), 201
@@ -45,7 +45,7 @@ def ListarVisitantes():
         result = visitante.ListarVisitantes(session)
         if result:
             visitantes = [
-                {"id_visitantes": row[0], "nome": row[1], "data_visita": row[2], "telefone": row[3], "qunt_visitas": row[4]}
+                {"id_visitante": row[0], "nome": row[1], "data_ultima_visita": row[2], "telefone": row[3], "qunt_visitas": row[4]}
                 for row in result
             ]
             session.commit()
@@ -73,7 +73,7 @@ def FormAtualizarVisitante(id_visitante):
     try:
         resultVisitante = visitante.GetVisitante(id_visitante, session)
         if resultVisitante:
-            visitante = {"id_visitantes": resultVisitante[0], "nome": resultVisitante[1], "data_visita": resultVisitante[2], "telefone": resultVisitante[3], "qunt_visitas": resultVisitante[4]}
+            visitante = {"id_visitante": resultVisitante[0], "nome": resultVisitante[1], "data_ultima_visita": resultVisitante[2], "telefone": resultVisitante[3], "qunt_visitas": resultVisitante[4]}
             return jsonify({"visitante": visitante}), 200
         elif resultVisitante is None:
             return jsonify({"mensagem": "Visitante não encontrado"}), 404
@@ -92,10 +92,10 @@ def FormAtualizarVisitante(id_visitante):
 def AtualizarVisitante(id_visitante):
     data = request.get_json()  # Obtém o JSON enviado
     nome = data.get('nome')
-    data_visita = data.get('data_visita')
+    data_ultima_visita = data.get('data_ultima_visita')
     telefone = data.get('telefone')
     qunt_visitas = data.get('qunt_visitas')
-    visitante = Visitante(nome, data_visita, telefone, qunt_visitas)
+    visitante = Visitante(nome, data_ultima_visita, telefone, qunt_visitas)
     
     session = sessionmaker(bind=engine)()
     
