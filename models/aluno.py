@@ -34,23 +34,25 @@ class Aluno:
 
 
     def AtualizarAluno(self, session):
-        query = """
-        UPDATE Aluno SET
+        query = text("""
+        UPDATE mydb.aluno SET
         nome = :nome, 
         data_nascimento = :data_nascimento, 
         cpf = :cpf, 
         email = :email, 
-        telefone = :telefone 
+        telefone = :telefone,
+        plano_id_plano = :plano_id
         WHERE matricula = :matricula
         RETURNING plano_id_plano
-        """
+        """)
         params = {
             "nome": self.nome,
             "data_nascimento": self.data_nascimento,
             "cpf": self.cpf,
             "email": self.email,
             "telefone": self.telefone,
-            "matricula": self.matricula
+            "matricula": self.matricula,
+            "plano_id": self.plano_id
         }
         result = session.execute(query, params)
         id = result.fetchone()
@@ -82,6 +84,16 @@ class Aluno:
         }
         session.execute(query, params)
 
+    def ExcluirAlunoDeAulas(self, session):
+        query = text("DELETE FROM mydb.aula_has_aluno WHERE aluno_matricula = :aluno_matricula")
+        params = {"aluno_matricula": self.matricula}
+        session.execute(query, params)
+        
+    def ExcluirAlunoDeTreinos(self, session):
+        query = text("DELETE FROM mydb.treino_has_aluno WHERE aluno_matricula = :aluno_matricula")
+        params = {"aluno_matricula": self.matricula}
+        session.execute(query, params) 
+    
     def CadastrarAlunoTreino(self, id_treino, session):
         query = text("""
         INSERT INTO mydb.treino_has_aluno (treino_id_treino, aluno_matricula) 
@@ -100,12 +112,12 @@ class Aluno:
     def GetAllAluno(self, session):
         query = text("""SELECT 
             a.matricula, a.nome, a.data_nascimento, a.cpf, a.email, a.telefone,
-            e.logradouro, e.cep, e.rua, e.num_casa, e.bairro, e.cidade,
-            p.nome AS nome_plano, p.valor AS valor_plano, p.descricao AS descricao_plano,
+            e.id_endereco, e.logradouro, e.cep, e.rua, e.num_casa, e.bairro, e.cidade, e.aluno_matricula, 
+            p.id_plano, p.nome AS nome_plano, p.valor AS valor_plano, p.descricao AS descricao_plano,
             ARRAY_AGG(DISTINCT t.id_treino) AS treinos,
             ARRAY_AGG(DISTINCT aa.aula_id_aula) AS aulas
         FROM mydb.aluno a
-        LEFT JOIN mydb.endereco e ON a.endereco_id_endereco = e.id_endereco
+        LEFT JOIN mydb.endereco e ON a.matricula = e.aluno_matricula
         LEFT JOIN mydb.plano p ON a.plano_id_plano = p.id_plano
         LEFT JOIN mydb.treino_has_aluno ta ON a.matricula = ta.aluno_matricula
         LEFT JOIN mydb.treino t ON ta.treino_id_treino = t.id_treino
@@ -113,8 +125,8 @@ class Aluno:
         WHERE a.matricula = :matricula
         GROUP BY 
             a.matricula, a.nome, a.data_nascimento, a.cpf, a.email, a.telefone,
-            e.logradouro, e.cep, e.rua, e.num_casa, e.bairro, e.cidade,
-            p.nome, p.valor, p.descricao;
+            e.id_endereco, e.logradouro, e.cep, e.rua, e.num_casa, e.bairro, e.cidade, e.aluno_matricula,
+            p.id_plano, p.nome, p.valor, p.descricao;
         """)
         params = {"matricula": self.matricula}
         result = session.execute(query, params)
