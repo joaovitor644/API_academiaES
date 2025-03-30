@@ -29,4 +29,11 @@ class Instrutor():
             "funcionario_NIT": self.nit
         }        
         session.execute(query, params)
-            
+    
+    def ListarInstrutores(self, session):
+        query = text("""
+        SELECT i.*, f.*
+        FROM mydb.instrutor i
+        JOIN mydb.funcionario f ON i.funcionario_NIT = f.NIT
+        """)
+        return session.execute(query).fetchall()

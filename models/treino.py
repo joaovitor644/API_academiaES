@@ -20,7 +20,7 @@ class Treino:
         id = id.fetchone()[0]
         return id
 
-    def ListarTrinos(self, session):
+    def ListarTreinos(self, session):
         query = text("""
         SELECT * FROM mydb.treino
         """)

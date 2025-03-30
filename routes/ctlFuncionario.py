@@ -87,6 +87,30 @@ def ListarFuncionarios():
     finally:
         session.close()
 
+@funcionario_route.route('/ListarInstrutores', methods=['GET'])
+def ListarInstrutores():
+    session = sessionmaker(bind=engine)()
+    try:
+        instrutor = Instrutor("", "")
+        result = instrutor.ListarInstrutores(session)
+        instrutores = [
+            {
+                "nit": row[0],  # O primeiro campo é o 'nit' do instrutor
+                "grau_academico": row[1],  # O segundo campo é o 'grau_academico'
+                "nome": row[3],  # O terceiro campo é o 'nome' do funcionário
+                "data_nascimento": row[4],  # A data de nascimento do funcionário
+                "cpf": row[5],  # O CPF do funcionário
+                "email": row[6],  # O e-mail do funcionário
+                "telefone": row[7]  # O telefone do funcionário
+            }
+            for row in result
+        ]
+        return jsonify({"instrutores": instrutores}), 200
+    except Exception as e:
+        print(f"Erro: {e}")
+        return jsonify({"mensagem": "Erro ao listar instrutores", "erro": str(e)}), 404
+    finally:
+        session.close()
 
 @funcionario_route.route('/FormAtualizarFuncionario/<string:nit>', methods=['GET'])
 def FormAtualizarFuncionario(nit):
@@ -227,3 +251,4 @@ def ExcluirFuncionario(nit):
         return jsonify({"mensagem": "Erro ao excluir funcionário", "erro": str(e)}), 404
     finally:
         session.close()
+        
