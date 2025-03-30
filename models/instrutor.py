@@ -4,7 +4,7 @@ from sqlalchemy.sql import text
 
 @dataclass
 class Instrutor():
-    nit: int
+    nit: str
     grau_academico: str
 
     def CadastrarInstrutor(self, session):

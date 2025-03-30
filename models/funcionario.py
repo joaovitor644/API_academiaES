@@ -3,7 +3,7 @@ from sqlalchemy.sql import text
 
 @dataclass
 class Funcionario:
-    nit: int
+    nit: str
     nome: str
     data_nascimento: str
     cpf: str
@@ -27,7 +27,7 @@ class Funcionario:
         VALUES (:nit, :nome, :data_nascimento, :cpf, :email, :telefone) 
         """)
         params = {
-            "nit": str(self.nit),
+            "nit": self.nit,
             "nome": self.nome,
             "data_nascimento": self.data_nascimento,
             "cpf": self.cpf,
@@ -50,7 +50,7 @@ class Funcionario:
         WHERE f.NIT = :nit;		
         """)
         params = {
-            "nit": str(self.nit)
+            "nit": self.nit
         }
         result = session.execute(query, params)
         funcionario = result.fetchone()
@@ -78,7 +78,7 @@ class Funcionario:
 
     def ExcluirFuncionario(self, nit, session):
         query = text("DELETE FROM mydb.funcionario WHERE NIT = :nit")
-        params = {"nit": str(nit)}
+        params = {"nit": nit}
         session.execute(query, params)
 
        
