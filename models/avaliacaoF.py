@@ -69,7 +69,7 @@ class AvaliacaoFisica:
         id = result.fetchone()
         return id
     
-    def RemoverAvaliacaoFisica(self, id_avaliacao_fisica, session):
+    def ExcluirAvaliacaoFisica(self, id_avaliacao_fisica, session):
         query = text("DELETE FROM mydb.avaliacao_fisica WHERE id_avaliacao_fisica = :id_avaliacao_fisica")
         params = {"id_avaliacao_fisica": id_avaliacao_fisica}
         result = session.execute(query, params)
