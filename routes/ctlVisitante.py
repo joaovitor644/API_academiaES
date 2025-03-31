@@ -114,7 +114,7 @@ def AtualizarVisitante(id_visitante):
     finally:
         session.close()
 
-@visitante_route.route('/RemoverVisitante/<int:id_visitante>', methods=['DELETE'])
+@visitante_route.route('/ExcluirVisitante/<int:id_visitante>', methods=['DELETE'])
 def RemoverVisitante(id_visitante):
     visitante = Visitante("", "", "", "")
     session = sessionmaker(bind=engine)()
@@ -123,12 +123,12 @@ def RemoverVisitante(id_visitante):
         session.commit()
         if rowsResult == 0:
             return jsonify({"mensagem": "Visitante não encontrado"}), 404
-        return jsonify({"mensagem": "Visitante removido com sucesso!"}), 200
+        return jsonify({"mensagem": "Visitante excluído com sucesso!"}), 200
     
     except Exception as e:
         session.rollback()
         print(f"Erro: {e}")
-        return jsonify({"mensagem": "Erro ao remover visitante", "erro": str(e)}), 404
+        return jsonify({"mensagem": "Erro ao excluir visitante", "erro": str(e)}), 404
     
     finally:
         session.close()

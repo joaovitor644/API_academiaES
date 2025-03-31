@@ -120,7 +120,7 @@ def AtualizarAvaliacaoFisica(id_avaliacao_fisica):
     finally:
         session.close()
 
-@avaliacao_fisica_route.route('/RemoverAvaliacaoFisica/<int:id_avaliacao_fisica>', methods=['DELETE'])
+@avaliacao_fisica_route.route('/ExcluirAvaliacaoFisica/<int:id_avaliacao_fisica>', methods=['DELETE'])
 def RemoverAvaliacaoFisica(id_avaliacao_fisica):
     avaliacao_fisica = AvaliacaoFisica("", "", "", "", "", "", "")
     session = sessionmaker(bind=engine)()
@@ -129,12 +129,12 @@ def RemoverAvaliacaoFisica(id_avaliacao_fisica):
         session.commit()
         if rowsResult == 0:
             return jsonify({"mensagem": "Avaliação física não encontrada"}), 404
-        return jsonify({"mensagem": "Avaliação física removida com sucesso!"}), 200
+        return jsonify({"mensagem": "Avaliação física excluída com sucesso!"}), 200
     
     except Exception as e:
         session.rollback()
         print(f"Erro: {e}")
-        return jsonify({"mensagem": "Erro ao remover avaliação física", "erro": str(e)}), 404
+        return jsonify({"mensagem": "Erro ao excluir avaliação física", "erro": str(e)}), 404
     
     finally:
         session.close()
