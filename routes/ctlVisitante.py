@@ -115,11 +115,11 @@ def AtualizarVisitante(id_visitante):
         session.close()
 
 @visitante_route.route('/ExcluirVisitante/<int:id_visitante>', methods=['DELETE'])
-def RemoverVisitante(id_visitante):
+def ExcluirVisitante(id_visitante):
     visitante = Visitante("", "", "", "")
     session = sessionmaker(bind=engine)()
     try:
-        rowsResult = visitante.RemoverVisitante(id_visitante, session)
+        rowsResult = visitante.ExcluirVisitante(id_visitante, session)
         session.commit()
         if rowsResult == 0:
             return jsonify({"mensagem": "Visitante não encontrado"}), 404

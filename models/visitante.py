@@ -42,7 +42,7 @@ class Visitante:
         id = result.fetchone()
         return id
         
-    def RemoverVisitante(self, id_visitante, session):
+    def ExcluirVisitante(self, id_visitante, session):
         query = text("DELETE FROM mydb.visitante WHERE id_visitante = :id_visitante")
         params = {"id_visitante": id_visitante}
         result = session.execute(query, params)
